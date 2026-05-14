@@ -1,0 +1,217 @@
+databases:
+  - name: auth-db
+    databaseName: authdb
+    user: postgres
+
+  - name: student-db
+    databaseName: studentdb
+    user: postgres
+
+  - name: academic-db
+    databaseName: academicdb
+    user: postgres
+
+  - name: enrollment-db
+    databaseName: enrollmentdb
+    user: postgres
+
+  - name: grades-db
+    databaseName: gradesdb
+    user: postgres
+
+  - name: payment-db
+    databaseName: paymentdb
+    user: postgres
+
+services:
+  - type: web
+    name: auth-service
+    env: docker
+    rootDir: auth-service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: auth-db
+          property: connectionString
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+
+  - type: web
+    name: student_service
+    env: docker
+    rootDir: student_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: student-db
+          property: connectionString
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+
+  - type: web
+    name: academic_service
+    env: docker
+    rootDir: academic_offer_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: academic-db
+          property: connectionString
+
+  - type: web
+    name: enrollment_service
+    env: docker
+    rootDir: enrollment_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: enrollment-db
+          property: connectionString
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+
+  - type: web
+    name: grades_service
+    env: docker
+    rootDir: grades_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: grades-db
+          property: connectionString
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+
+  - type: web
+    name: payment_service
+    env: docker
+    rootDir: payment_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: payment-db
+          property: connectionString
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: AUTH_SERVICE_URL
+        fromService:
+          type: web
+          name: auth-service
+          property: url
+      - key: STUDENT_SERVICE_URL
+        fromService:
+          type: web
+          name: student_service
+          property: url
+      - key: WOMPI_ENV
+        value: sandbox
+      - key: WOMPI_BASE_URL
+        value: https://sandbox.wompi.co/v1
+      - key: WOMPI_PUBLIC_KEY
+        sync: false
+      - key: WOMPI_PRIVATE_KEY
+        sync: false
+      - key: WOMPI_EVENTS_SECRET
+        sync: false
+      - key: WOMPI_INTEGRITY_SECRET
+        sync: false
+      - key: PAYMENT_LINK_REDIRECT_URL
+        fromService:
+          type: web
+          name: gateway_service
+          property: url
+      - key: PAYMENT_EXPIRATION_MINUTES
+        value: "30"
+      - key: WOMPI_WEBHOOK_TOLERANCE_SECONDS
+        value: "600"
+      - key: HTTP_TIMEOUT_SECONDS
+        value: "15"
+      - key: LOG_LEVEL
+        value: INFO
+
+  - type: web
+    name: reporting_service
+    env: docker
+    rootDir: reporting_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: AUTH_SECRET_KEY
+        value: esto_ta_protegido
+      - key: GRADES_SERVICE_URL
+        fromService:
+          type: web
+          name: grades_service
+          property: url
+      - key: STUDENT_SERVICE_URL
+        fromService:
+          type: web
+          name: student_service
+          property: url
+      - key: COURSES_SERVICE_URL
+        fromService:
+          type: web
+          name: academic_service
+          property: url
+      - key: PAYMENT_SERVICE_URL
+        fromService:
+          type: web
+          name: payment_service
+          property: url
+
+  - type: web
+    name: gateway_service
+    env: docker
+    rootDir: gateway_service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: AUTH_SERVICE_URL
+        fromService:
+          type: web
+          name: auth-service
+          property: url
+      - key: STUDENT_SERVICE_URL
+        fromService:
+          type: web
+          name: student_service
+          property: url
+      - key: ACADEMIC_SERVICE_URL
+        fromService:
+          type: web
+          name: academic_service
+          property: url
+      - key: ENROLLMENT_SERVICE_URL
+        fromService:
+          type: web
+          name: enrollment_service
+          property: url
+      - key: GRADES_SERVICE_URL
+        fromService:
+          type: web
+          name: grades_service
+          property: url
+      - key: PAYMENT_SERVICE_URL
+        fromService:
+          type: web
+          name: payment_service
+          property: url
+      - key: REPORTING_SERVICE_URL
+        fromService:
+          type: web
+          name: reporting_service
+          property: url

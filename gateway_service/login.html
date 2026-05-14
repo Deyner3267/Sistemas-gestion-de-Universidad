@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SGAU — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fondo decorativo */
+    .bg-decoration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      opacity: 0.1;
+      border-radius: 50%;
+      background: white;
+      filter: blur(40px);
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      right: -100px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      bottom: -80px;
+      left: -80px;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(20px); }
+    }
+
+    /* Login Card */
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: rgba(139, 92, 246, 0.15);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(168, 85, 247, 0.3);
+      border-radius: 30px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem 3rem 1rem 1.2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      color: #f5f5f5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-input:focus {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #f5f5f5;
+      transition: color 0.3s ease;
+    }
+
+    .remember-me:hover {
+      color: #c084fc;
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #c084fc;
+    }
+
+    .forgot-password {
+      color: #f5f5f5;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password:hover {
+      color: #c084fc;
+      text-decoration: underline;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 1rem;
+      background: #f5f5f5;
+      color: #7e22ce;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      background: #f0f0f0;
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .secondary-button {
+      width: 100%;
+      padding: 0.95rem;
+      background: transparent;
+      color: #f5f5f5;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      border-radius: 15px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .secondary-button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .secondary-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .card-note {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.88rem;
+      text-align: center;
+      margin: -0.3rem 0 1rem;
+    }
+
+    .register-panel {
+      display: none;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .register-panel.open {
+      display: block;
+    }
+
+    .login-mode-hidden {
+      display: none;
+    }
+
+    .register-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .register-link {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #f5f5f5;
+      margin-top: 1.5rem;
+    }
+
+    .register-link a {
+      color: #c084fc;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .register-link a:hover {
+      color: #f5f5f5;
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: #ff6b9d;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 1rem;
+      min-height: 20px;
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #f5f5f5;
+      margin-top: 1rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #f5f5f5;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 576px) {
+      .login-card {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      .login-title {
+        font-size: 2rem;
+      }
+
+      .form-input {
+        font-size: 16px; /* Evita zoom en iOS */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fondos decorativos -->
+  <div class="bg-decoration">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="login-container">
+    <div class="login-card">
+      <h1 class="login-title">Login</h1>
+      <p class="card-note">Ingresa con tu cuenta o crea una cuenta nueva de estudiante.</p>
+
+      <form class="login-form" id="loginForm" autocomplete="on">
+        <!-- Email -->
+        <div class="form-group">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="username"
+            placeholder="Email"
+            class="form-input"
+            required
+          />
+          
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="Contraseña"
+            class="form-input"
+            required
+          />
+          
+        </div>
+
+        <!-- Options -->
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" name="remember" />
+            <span>Recuérdame</span>
+          </label>
+          
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="login-button">Ingresar</button>
+      </form>
+
+      <button type="button" class="secondary-button" id="toggleRegisterBtn">Registrarse</button>
+
+      <div class="register-panel" id="registerPanel">
+        <form class="register-grid" id="registerForm">
+          <div class="form-group">
+            <input
+              type="text"
+              id="register-first-name"
+              name="first_name"
+              placeholder="Nombres"
+              class="form-input"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="text"
+              id="register-last-name"
+              name="last_name"
+              placeholder="Apellidos"
+              class="form-input"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="text"
+              id="register-document-id"
+              name="document_id"
+              placeholder="Número de identidad"
+              class="form-input"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="email"
+              id="register-email"
+              name="email"
+              placeholder="Correo institucional @ucc.edu.co"
+              class="form-input"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="password"
+              id="register-password"
+              name="password"
+              placeholder="Contraseña"
+              class="form-input"
+              required
+            />
+          </div>
+
+          <button type="submit" class="login-button" id="registerSubmitBtn">Crear cuenta de estudiante</button>
+        </form>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-msg" id="errorMsg"></div>
+
+      <!-- Loading Spinner -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Register Link -->
+     
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const loading = document.getElementById('loading');
+    const registerPanel = document.getElementById('registerPanel');
+    const toggleRegisterBtn = document.getElementById('toggleRegisterBtn');
+    const loginTitle = document.querySelector('.login-title');
+    const cardNote = document.querySelector('.card-note');
+
+    function setLoadingState(isLoading) {
+      loading.style.display = isLoading ? 'block' : 'none';
+      document.querySelector('.login-button').disabled = isLoading;
+      toggleRegisterBtn.disabled = isLoading;
+      const registerSubmitBtn = document.getElementById('registerSubmitBtn');
+      if (registerSubmitBtn) registerSubmitBtn.disabled = isLoading;
+    }
+
+    function toggleRegisterPanel() {
+      const isOpen = registerPanel.classList.toggle('open');
+      loginForm.classList.toggle('login-mode-hidden', isOpen);
+      loginTitle.textContent = isOpen ? 'Registro' : 'Login';
+      cardNote.textContent = isOpen
+        ? 'Crea una cuenta nueva. Este registro solo está habilitado para estudiantes.'
+        : 'Ingresa con tu cuenta o crea una cuenta nueva de estudiante.';
+      toggleRegisterBtn.textContent = isOpen ? 'Volver al login' : 'Registrarse';
+      errorMsg.textContent = '';
+      errorMsg.style.color = '#ff6b9d';
+    }
+
+    toggleRegisterBtn.addEventListener('click', toggleRegisterPanel);
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const remember = document.querySelector('input[name="remember"]').checked;
+
+      errorMsg.textContent = '';
+      setLoadingState(false);
+
+      if (!email || !password) {
+        errorMsg.textContent = 'Por favor completa todos los campos';
+        return;
+      }
+
+      setLoadingState(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.access_token) {
+          // Guardar token y datos de usuario
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('user_role', data.role || 'usuario');
+          localStorage.setItem('user_email', email);
+          
+          if (remember) {
+            localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('savedEmail', email);
+          }
+
+          // Redirigir por rol
+          if ((data.role || '').toLowerCase() === 'admin') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/index.html';
+          }
+        } else {
+          errorMsg.textContent = data.detail || 'Email o contraseña inválidos';
+          setLoadingState(false);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsg.textContent = 'Error de conexión. Intenta nuevamente.';
+        setLoadingState(false);
+      }
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const firstName = document.getElementById('register-first-name').value.trim();
+      const lastName = document.getElementById('register-last-name').value.trim();
+      const documentId = document.getElementById('register-document-id').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value;
+
+      errorMsg.textContent = '';
+
+      if (!firstName || !lastName || !documentId || !email || !password) {
+        errorMsg.textContent = 'Completa todos los campos del registro';
+        return;
+      }
+
+      setLoadingState(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            document_id: documentId,
+            email,
+            password,
+            role: 'estudiante',
+          }),
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          errorMsg.style.color = '#9dffb2';
+          errorMsg.textContent = 'Cuenta creada. Ahora puedes ingresar como estudiante.';
+          registerForm.reset();
+          document.getElementById('email').value = email;
+          toggleRegisterPanel();
+        } else {
+          errorMsg.style.color = '#ff6b9d';
+          errorMsg.textContent = data.detail || 'No se pudo crear la cuenta de estudiante';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsg.style.color = '#ff6b9d';
+        errorMsg.textContent = 'Error de conexión. Intenta nuevamente.';
+      } finally {
+        setLoadingState(false);
+      }
+    });
+
+    // Cargar email si está guardado
+    window.addEventListener('load', () => {
+      errorMsg.style.color = '#ff6b9d';
+      const savedEmail = localStorage.getItem('savedEmail');
+      if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+        document.querySelector('input[name="remember"]').checked = true;
+      }
+
+      // Si ya está logueado, redirigir al dashboard
+      const token = localStorage.getItem('token');
+      if (token) {
+        window.location.href = '/index.html';
+      }
+    });
+  </script>
+</body>
+</html>
